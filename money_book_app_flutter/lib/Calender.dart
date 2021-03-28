@@ -24,11 +24,8 @@ class _CalenderState extends State<Calender> {
         child: CalendarCarousel<Event>(  
           // onDayPressed 日付を押したときの挙動
            onDayPressed: (DateTime date, List<Event> events){
-             DateTime currentTime = new DateTime.now();
-             print(currentTime);
-
           // 日付押すと、別ページに飛ぶ
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Calculate())
+            Navigator.push(context, MaterialPageRoute(builder: (context) => new Calculate(currentDate: date))
             );
           }
 
