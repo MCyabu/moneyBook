@@ -27,6 +27,12 @@ class _CalculateState extends State<Calculate> {
   String _itemText = '';
   String _moneyText = '';
 
+  // 編集用に取得するindex
+  int editIndex;
+
+  // 編集中かどうかの判断
+  bool editflag;
+
   // 家計簿リスト
   List<Map<String,String>> houseMoneyList = [];
 
@@ -48,10 +54,25 @@ class _CalculateState extends State<Calculate> {
     };
   }
 
+
+  void newItem(editIndex) {
+     setState(()=>{
+      _itemText = _itemController.text,
+      _moneyText = _moneyController.text,
+      // itemTextとmoneyTextの値を,moneyListの中に入れる
+      moneyList = {'item':_itemText,'money':_moneyText},
+      if( editflag != true ){   // houseMoneyListにない場合
+      houseMoneyList.add(moneyList), 
+      }else{ 
+        print('hoge'), 
+        houseMoneyList[editIndex] = moneyList,
+        editflag = false
+      }
+    });
+  }
+
   //  itemView関数
   Widget itemView(value,index){
-    print(value);
-    print(index);
     return Container(
       child: Column(
         children: [
@@ -74,7 +95,12 @@ class _CalculateState extends State<Calculate> {
             shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)
             ),
-            onPressed: (){}
+            onPressed: (){ 
+              _itemController.text = value['item'];
+              _moneyController.text = value['money'];
+               editflag = true;
+               editIndex = index;
+            }
           )
         ]
       )
@@ -108,13 +134,8 @@ class _CalculateState extends State<Calculate> {
               borderRadius: BorderRadius.circular(10),
               ),
               // 項目と金額を取得する
-              onPressed: () =>setState(()=>{
-                _itemText = _itemController.text,
-                _moneyText = _moneyController.text,
-                // itemTextとmoneyTextの値を,moneyListの中に入れる
-                moneyList = {'item':_itemText,'money':_moneyText},
-                houseMoneyList.add(moneyList), 
-              }),),
+              onPressed: ()=>newItem(editIndex)
+            ),
               // カレンダーで取得した日付を反映する
             Text(currentDateStr),
             ListView(
