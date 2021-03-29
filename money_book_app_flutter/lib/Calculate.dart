@@ -33,6 +33,9 @@ class _CalculateState extends State<Calculate> {
   // 編集中かどうかの判断
   bool editflag;
 
+  // 家計簿リストの金額の合計値
+  String strSum = '' ;
+
   // 家計簿リスト
   List<Map<String,String>> houseMoneyList = [];
 
@@ -47,15 +50,11 @@ class _CalculateState extends State<Calculate> {
     DateFormat formatter = new DateFormat('yyyy/MM/dd(E)', "ja_JP");
   // currentDateStrを初期化する
     currentDateStr = formatter.format(widget.currentDate);
-    // 初期化<String,String>
-    moneyList =  {
-      'item':_itemText,
-      'money':_moneyText,
-    };
+
   }
 
 
-  void newItem(editIndex) {
+  void newItem() {
      setState(()=>{
       _itemText = _itemController.text,
       _moneyText = _moneyController.text,
@@ -63,13 +62,31 @@ class _CalculateState extends State<Calculate> {
       moneyList = {'item':_itemText,'money':_moneyText},
       if( editflag != true ){   // houseMoneyListにない場合
       houseMoneyList.add(moneyList), 
+      // 文字列を数値に変換
       }else{ 
         print('hoge'), 
         houseMoneyList[editIndex] = moneyList,
+        // int.parse(moneyList['money']),
         editflag = false
-      }
+      },
+      sumMoney()
     });
   }
+
+void sumMoney(){
+  List numList = [];
+  int sum =0;
+  setState(()=>{
+    for(int i = 0; i<houseMoneyList.length;i++){
+      // numList.add(int.parse(houseMoneyList[i]['money']))
+      sum +=int.parse(houseMoneyList[i]['money'])
+    },
+    // sum = numList.reduce((value, element) => value + element),
+    strSum = sum.toString(),
+    print(numList),
+    print(sum),
+  });
+}
 
   //  itemView関数
   Widget itemView(value,index){
@@ -85,7 +102,8 @@ class _CalculateState extends State<Calculate> {
             borderRadius: BorderRadius.circular(10)
             ),
             onPressed: () =>setState(()=>{
-              houseMoneyList.removeAt(index)
+              houseMoneyList.removeAt(index),
+              sumMoney(),
             }
           ),
         ),
@@ -125,6 +143,7 @@ class _CalculateState extends State<Calculate> {
               // 金額の入力を受け取る
               controller: _moneyController,
               decoration: InputDecoration(labelText: '金額'),
+              keyboardType: TextInputType.number, 
             ),
             // 入力値を反映する
             RaisedButton(
@@ -134,7 +153,7 @@ class _CalculateState extends State<Calculate> {
               borderRadius: BorderRadius.circular(10),
               ),
               // 項目と金額を取得する
-              onPressed: ()=>newItem(editIndex)
+              onPressed: ()=>newItem()
             ),
               // カレンダーで取得した日付を反映する
             Text(currentDateStr),
@@ -152,17 +171,10 @@ class _CalculateState extends State<Calculate> {
                   )
                 ]      
             ),
-            RaisedButton(
-              child: const Text('支出合計'),
-              color: Colors.blue,
-              shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-              ),
-              onPressed: ()=>{},
-            ),
+            Text(strSum),
             // 前の画面に戻る
             RaisedButton(
-              child: const Text('戻る'),
+              child: const Text('保存'),
               color: Colors.purple,
               shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
