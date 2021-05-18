@@ -2,6 +2,7 @@
 // import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:in_out_mobile_app_flutter/Header.dart';
 import 'Calculate.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
@@ -239,7 +240,10 @@ class _CalenderState extends State<Calender> {
   @override
   Widget build(BuildContext context) {
     // DateTime oneDayAfterFirstDay; // 翌日の日付。１日ずつ追加していく。
-    return Scaffold(body: SingleChildScrollView(
+    return Scaffold(
+      appBar: Header(
+      ),
+      body: SingleChildScrollView(
             child: Column(children: <Widget>[
               Card(
                 // カレンダー表示
