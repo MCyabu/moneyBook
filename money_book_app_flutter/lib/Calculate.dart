@@ -135,7 +135,8 @@ class _CalculateState extends State<Calculate> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return 
+    Scaffold(
         resizeToAvoidBottomPadding: false,
         body: Container(
             child: SingleChildScrollView(
